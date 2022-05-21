@@ -1,7 +1,7 @@
-FROM ubuntu:20.04
+FROM mathworks/matlab:r2022a
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get -y update; apt -y install perl python3 build-essential openjdk-11-jdk git
-WORKDIR /gp
+RUN sudo apt-get -y update; sudo apt-get -y install perl python3 build-essential openjdk-11-jdk git wget unzip
+WORKDIR /home/matlab
 
 #ASPRAlign
 RUN git clone https://github.com/bdslab/aspralign.git; \
@@ -22,8 +22,10 @@ RUN git clone https://github.com/bdslab/aspralign.git; \
     tar -xf ViennaRNA-2.5.0.tar.gz; \
     rm ViennaRNA-2.5.0.tar.gz; \
     cd ViennaRNA-2.5.0; \
+    ./configure; \
     make; \
-    make install; \
+    sudo make install; \
+    cd ..; \
 
     #MiGaL
     wget http://www-igm.univ-mlv.fr/~allali/logiciels/migal_tgz/migal.tgz && tar -xf migal.tgz && rm migal.tgz; \
@@ -34,7 +36,9 @@ RUN git clone https://github.com/bdslab/aspralign.git; \
     #LocARNA
     wget https://github.com/s-will/LocARNA/releases/download/v2.0.0RC10/locarna-2.0.0RC10.tar.gz && tar -xf locarna-2.0.0RC10.tar.gz && rm locarna-2.0.0RC10.tar.gz; \
     cd locarna-2.0.0RC10; \
+    ./configure; \
     make; \
-    make install;
+    sudo make install; \
+    cd ..
 
 ADD molecolePerTest ./molecolePerTest 
